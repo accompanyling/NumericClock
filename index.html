@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>数字时钟</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="css/clock.css">
+</head>
+<body>
+
+	<div class="box" id="clock">
+		<div class="origin"></div>
+
+		<div class="dot_box">
+			<div class="dot">6</div>
+			<div class="dot">5</div>
+			<div class="dot">4</div>
+			<div class="dot">3</div>
+			<div class="dot">3</div>
+			<div class="dot">1</div>
+			<div class="dot">12</div>
+			<div class="dot">11</div>
+			<div class="dot">10</div>
+			<div class="dot">9</div>
+			<div class="dot">8</div>
+			<div class="dot">7</div>
+		</div>
+
+		<div class="clock_line hour_line" id="hour_line"></div>
+		<div class="clock_line minute_line" id="minute_line"></div>
+		<div class="clock_line second_line" id="second_line"></div>
+
+		<div class="date_info" id="date_info"></div>
+
+		<div class="time_info">
+			<div class="time" id="hour_time"></div>
+			<div class="time" id="minute_time"></div>
+			<div class="time" id="second_time"></div>
+		</div>
+	</div>
+	
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript">
+		var clock=document.getElementById("clock");
+		function initNumXY(){
+			var radius=160;
+			var dot_num=360/$(".dot").length;
+			var ahd=dot_num*Math.PI/180;
+
+			$('.dot').each(function(index,el){
+				$(this).css({
+					"left":180+Math.sin((ahd*index))*radius,
+					"top":180+Math.cos((ahd*index))*radius
+				});
+			});
+
+			for(var i=0;i<60;i++){
+				clock.innerHTML+="<div class='clock-scale'> " + 
+                   "<div class='scale-hidden'></div>" + 
+                   "<div class='scale-show'></div>" + 
+                  "</div>";
+			}
+			var scale=document.getElementsByClassName("clock-scale");
+			for(var i=0;i<scale.length;i++){
+				scale[i].style.transform="rotate("+(i*6-90)+"deg)";
+			}
+		}
+		initNumXY();
+		var hour_line=document.getElementById("hour_line"),
+		    minute_line=document.getElementById("minute_line"),
+		    second_line=document.getElementById("second_line"),
+		    date_info=document.getElementById("date_info"),
+		    hour_time=document.getElementById("hour_time"),
+		    minute_time=document.getElementById("minute_time"),
+		    second_time=document.getElementById("second_time");
+		function setTime(){
+			var nowdate=new Date();
+
+			var year=nowdate.getFullYear(),
+			    month=nowdate.getMonth()+1,
+			    day=nowdate.getDay();
+
+			var date=nowdate.getDate();
+
+			var hours=nowdate.getHours(),
+			    minutes=nowdate.getMinutes(),
+			    seconds=nowdate.getSeconds();
+
+			var weekday=["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];
+			date_info.innerHTML=year+"年"+month+"月"+date+"日  "+weekday[day];
+
+			hour_time.innerHTML=hours>=10? hours:"0"+hours;
+			minute_time.innerHTML=minutes>=10? minutes:"0"+minutes;
+			second_time.innerHTML=seconds>=10? seconds:"0"+seconds;
+
+			var hours_rotate=(hours*30-90)+(Math.floor(minutes/12)*6);
+			hour_line.style.transform='rotate('+hours_rotate+'deg)';
+			minute_line.style.transform='rotate('+(minutes*6-90)+'deg)';
+			second_line.style.transform='rotate('+(seconds*6-90)+'deg)';
+		}
+		setInterval(setTime,1000);
+		
+	</script>
+</body>
+</html>
